@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/1224824475.svg)](https://doi.org/10.5281/zenodo.19894585)
+
 Code for manuscript: Spatial mark-resight models reveal declining wild turkey population in Georgia, USA
 
 There are 3 folders in this repository. 

@@ -267,7 +267,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(coda)
-# sim_list <- readRDS('simulation_forSMR.rds')
+sim_list <- readRDS('simulation_forSMR.rds')
 # SimOuts <- list.files('./SimAbund')
 # k_vals <- readr::parse_number(SimOuts)
 # n <- length(k_vals) #eventually will be 200
@@ -413,3 +413,25 @@ ggplot(sim.visual, aes(x= Group, y = Bias))+
         legend.text = element_text(size = 13),
         legend.title = element_text(size = 13),
         legend.position = 'top')
+
+
+### for manuscript, summarize detections:
+det_info <- array(NA, c(100, 4))
+uniqueTraps <- function(arr) {
+  apply(arr, 1, function(mat) {
+    vals <- as.vector(mat)
+    vals <- vals[vals != -1]
+    length(unique(vals))
+  })
+}
+for(i in 1:100){
+  me <- sim_list[[i]]
+  medat <- me$nimdat$detNums[1:45,] #all the tagged ones
+  seen <- sum(rowSums(medat)>0) #seen at least once by a camera
+  unique_cams <- mean(uniqueTraps(me$nimdat$detIndices[1:45,,]))
+  avgF <- mean(rowSums(me$nimdat$nsum[,,1]))
+  avgM <- mean(rowSums(me$nimdat$nsum[,,2]))
+  det_info[i, ] <- c(seen, unique_cams, avgF, avgM)
+}
+
+summary(det_info)

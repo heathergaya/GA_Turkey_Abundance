@@ -267,77 +267,80 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(coda)
-sim_list <- readRDS('simulation_forSMR.rds')
-SimOuts <- list.files('./SimAbund')
-k_vals <- readr::parse_number(SimOuts)
-n <- length(k_vals) #eventually will be 200
-Model <- ifelse(1:n %in% grep('Band', SimOuts), 'BandSMR', 'TelemetrySMR')
-which(table(k_vals) < 2)
+# sim_list <- readRDS('simulation_forSMR.rds')
+# SimOuts <- list.files('./SimAbund')
+# k_vals <- readr::parse_number(SimOuts)
+# n <- length(k_vals) #eventually will be 200
+# Model <- ifelse(1:n %in% grep('Bands', SimOuts), 'BandSMR', 'TelemetrySMR')
+# which(table(k_vals) < 2)
+# 
+# sim.res <- data.frame(
+#   k     = integer(n),
+#   N    = numeric(n),
+#   NF    = numeric(n),
+#   NM    = numeric(n),
+#   SDF    = numeric(n),
+#   SDM    = numeric(n),
+#   lam01 = numeric(n),
+#   lam02 = numeric(n),
+#   sig1  = numeric(n),
+#   sig2  = numeric(n),
+#   SDFS  = numeric(n),
+#   SDFL  = numeric(n),
+#   SDMS  = numeric(n),
+#   SDML  = numeric(n),
+#   truesig1 = 0.6,
+#   truesig2 = 0.9,
+#   truelam01 = .07,
+#   truelam02= .03,
+#   N1CI  = logical(n),
+#   N2CI  = logical(n),
+#   Sig1CI = logical(n),
+#   Sig2CI = logical(n),
+#   Lam01CI = logical(n),
+#   Lam02CI = logical(n),
+#   TrueNF  = numeric(n),
+#   TrueNM = numeric(n),
+#   Model = Model
+# )
+# 
+# for (i in 1:n){
+#   me <- readRDS(file.path(paste0('./SimAbund/', SimOuts[i])))
+#   
+#   summ    <- summary(me)
+#   sum.me  <- summ$quantiles
+#   stats.me <- summ$statistics
+#   
+#   sim.res$k[i]     <- k_vals[i]
+#   sim.res$NF[i]    <- sum.me[1, 3] #total abund
+#   sim.res$NF[i]    <- sum.me[2, 3] #female abund
+#   sim.res$SDF[i]    <- stats.me[2, 2] #SD of abund
+#   sim.res$SDM[i]    <-  stats.me[3, 2]  #female abund
+#   sim.res$NM[i]    <- sum.me[3, 3]
+#   sim.res$lam01[i] <- sum.me[4, 3] #lam0
+#   sim.res$lam02[i] <- sum.me[5, 3]
+#   sim.res$sig1[i]  <- sum.me[8, 3] #sig  
+#   sim.res$sig2[i]  <- sum.me[9, 3]
+#   sim.res$SDFS[i]    <- stats.me[8, 2]
+#   sim.res$SDFL[i]    <-  stats.me[4, 2] 
+#   sim.res$SDMS[i]    <- stats.me[9, 2] 
+#   sim.res$SDML[i]    <-  stats.me[5, 2] 
+#   
+#   myconsts <- c(sim_list[k_vals[i]][[1]]$Nf_true, sim_list[k_vals[i]][[1]]$Nm_true)
+#   
+#   sim.res$N1CI[i] <- sum.me[2, 1] <= myconsts[1]  & sum.me[2, 5] >=  myconsts[1] #CI performance
+#   sim.res$N2CI[i] <- sum.me[3, 1] <=  myconsts[2] & sum.me[3, 5] >=  myconsts[2]
+#   sim.res$Lam01CI[i] <- sum.me[4, 1] <= .07  & sum.me[4, 5] >=  .07 #CI performance
+#   sim.res$Lam02CI[i] <- sum.me[5, 1] <=  .03 & sum.me[5, 5] >=  .03
+#   sim.res$Sig1CI[i] <- sum.me[8, 1] <= 0.6  & sum.me[8, 5] >=  0.6 
+#   sim.res$Sig2CI[i] <- sum.me[9, 1] <=  .9 & sum.me[9, 5] >=  .9
+#   
+#   sim.res$TrueNF[i] <- myconsts[1]
+#   sim.res$TrueNM[i] <- myconsts[2]
+# }
 
-sim.res <- data.frame(
-  k     = integer(n),
-  N    = numeric(n),
-  NF    = numeric(n),
-  NM    = numeric(n),
-  SDF    = numeric(n),
-  SDM    = numeric(n),
-  lam01 = numeric(n),
-  lam02 = numeric(n),
-  sig1  = numeric(n),
-  sig2  = numeric(n),
-  SDFS  = numeric(n),
-  SDFL  = numeric(n),
-  SDMS  = numeric(n),
-  SDML  = numeric(n),
-  truesig1 = 0.6,
-  truesig2 = 0.9,
-  truelam01 = .07,
-  truelam02= .03,
-  N1CI  = logical(n),
-  N2CI  = logical(n),
-  Sig1CI = logical(n),
-  Sig2CI = logical(n),
-  Lam01CI = logical(n),
-  Lam02CI = logical(n),
-  TrueNF  = numeric(n),
-  TrueNM = numeric(n),
-  Model = Model
-)
-
-for (i in 1:n){
-  me <- readRDS(file.path(paste0('./SimAbund/', SimOuts[i])))
-  
-  summ    <- summary(me)
-  sum.me  <- summ$quantiles
-  stats.me <- summ$statistics
-  
-  sim.res$k[i]     <- k_vals[i]
-  sim.res$NF[i]    <- sum.me[1, 3] #total abund
-  sim.res$NF[i]    <- sum.me[2, 3] #female abund
-  sim.res$SDF[i]    <- stats.me[2, 2] #SD of abund
-  sim.res$SDM[i]    <-  stats.me[3, 2]  #female abund
-  sim.res$NM[i]    <- sum.me[3, 3]
-  sim.res$lam01[i] <- sum.me[4, 3] #lam0
-  sim.res$lam02[i] <- sum.me[5, 3]
-  sim.res$sig1[i]  <- sum.me[8, 3] #sig  
-  sim.res$sig2[i]  <- sum.me[9, 3]
-  sim.res$SDFS[i]    <- stats.me[8, 2]
-  sim.res$SDFL[i]    <-  stats.me[4, 2] 
-  sim.res$SDMS[i]    <- stats.me[9, 2] 
-  sim.res$SDML[i]    <-  stats.me[5, 2] 
-  
-  myconsts <- c(sim_list[k_vals[i]][[1]]$Nf_true, sim_list[k_vals[i]][[1]]$Nm_true)
-  
-  sim.res$N1CI[i] <- sum.me[2, 1] <= myconsts[1]  & sum.me[2, 5] >=  myconsts[1] #CI performance
-  sim.res$N2CI[i] <- sum.me[3, 1] <=  myconsts[2] & sum.me[3, 5] >=  myconsts[2]
-  sim.res$Lam01CI[i] <- sum.me[4, 1] <= .07  & sum.me[4, 5] >=  .07 #CI performance
-  sim.res$Lam02CI[i] <- sum.me[5, 1] <=  .03 & sum.me[5, 5] >=  .03
-  sim.res$Sig1CI[i] <- sum.me[8, 1] <= 0.6  & sum.me[8, 5] >=  0.6 
-  sim.res$Sig2CI[i] <- sum.me[9, 1] <=  .9 & sum.me[9, 5] >=  .9
-  
-  sim.res$TrueNF[i] <- myconsts[1]
-  sim.res$TrueNM[i] <- myconsts[2]
-}
+### This is the object produced by code above:
+sim.res <- read.csv('simulation.results.csv')
 
 simCIs <- sim.res %>% 
   group_by(Model) %>%
@@ -363,7 +366,7 @@ mysummary <- function(x, y){
   b <- sd(x-y)
   c <- median((x-y)/y)
   d <- sd((x-y)/y)
-  return(round(c(a,b,c,d), 3))
+  return(round(c(a,b,c,d), 2))
 }
 
 BandRes <- subset(sim.res, sim.res$Model == "BandSMR")

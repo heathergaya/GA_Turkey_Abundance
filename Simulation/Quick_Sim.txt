@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=SMR_sim
+#SBATCH --partition=batch
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=heg08492@uga.edu
+#SBATCH --ntasks=3
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=50gb
+#SBATCH --time=2-1:00:00
+#SBATCH --output=%x_%A_%a.out
+#SBATCH --error=%x_%A_%a.err
+#SBATCH --constraint=EDR
+#SBATCH --array=1-100
+
+cd $SLURM_SUBMIT_DIR
+module load R/4.3.1-foss-2022a
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+R CMD BATCH "--args k=$SLURM_ARRAY_TASK_ID D=2" Sim_Models.R
+

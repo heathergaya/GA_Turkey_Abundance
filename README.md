@@ -34,7 +34,7 @@ CaseStudy
   + code to have nimble output results every 500 iterations 
 
 RawData
--
+- See metadata file in the RawData folder for more specific information on csvs
 
   - CamTaggedTurkeys_20_25.csv
     + All turkeys with transmitters/bands detected on game cameras

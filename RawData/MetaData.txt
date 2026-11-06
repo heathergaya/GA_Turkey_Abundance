@@ -1,0 +1,75 @@
+# File 1: WinterCams_20_25.csv
+
+## File description
+File contains records from winter camera traps used to monitor wild turkeys (*Meleagris gallopavo*)
+
+## Data dictionary
+
+| Column | Description |
+|---|---|
+| `DateTime` | Date of the camera-trap observation. |
+| `Species` | Species identified in the camera-trap observation. |
+| `No_Males` | Number of male individuals (integer) recorded in the observation. |
+| `No_Females` | Number of female individuals (integer) recorded in the observation. |
+| `Band_ID` | Unique identification code associated with a banded individual, when available. |
+| `Camera_ID` | Unique identifier of the camera trap that recorded the observation. |
+| `Month` | Calendar month of the observation (1–12). |
+| `Day` | Day of the month of the observation (1–31). |
+| `Year` | Four-digit calendar year of the observation. |
+
+# File 2: WinterCamera_Locations.csv
+
+## File description
+
+This file contains the coordinates of camera-trap locations used to monitor wild turkeys (*Meleagris gallopavo*) during winter sampling periods. 
+
+## Data dictionary
+
+| Column | Description |
+|---|---|
+| `lineID` | Sequential row identifier for each camera location. |
+| `CamerID` | Unique identifier assigned to each camera-trap location, corresponding to `Camera_ID` in `WinterCams_20_25.csv`. |
+| `Latitude` | Latitude of the camera-trap location in decimal degrees, WGS 84 (EPSG:4326). |
+| `Longitude` | Longitude of the camera-trap location in decimal degrees, WGS 84 (EPSG:4326).  |
+
+# File 3: CamTaggedTurkeys_20_25.csv
+
+## File description
+
+This file contains camera-trap observations associated with individually marked wild turkeys (*Meleagris gallopavo*). Individuals may have been seen with other turkeys or alone. 
+
+## Data dictionary
+
+| Column | Description |
+|---|---|
+| `DateTime` | Date of the camera-trap observation (MM/DD/YYYY). |
+| `Species` | Species identified in the camera-trap observation (will all be Turkeys). |
+| `No_Males` | Number of male individuals recorded in the observation. |
+| `No_Females` | Number of female individuals recorded in the observation. |
+| `Band_ID` | Unique band identifier associated with an individually marked turkey. |
+| `Camera_ID` | Unique identifier of the camera trap that recorded the observation. |
+| `Month` | Calendar month of the observation (1–12). |
+| `Day` | Day of the month of the observation (1–31). |
+| `Year` | Four-digit calendar year of the observation. |
+| `Site` | Categorical identifier of the study site where the observation was recorded (e.g., CC, BFG). |
+| `Transmitter` | Unique transmitter identification number associated with the individually marked turkey. |
+
+## Additional notes
+- Multiple observations of the same marked individual may occur on the same date or across different dates and camera locations.
+
+
+# File 4: Camera_effort_Feb14_Marc14.csv
+
+## File description
+
+This file contains annual camera-trap operational periods used to quantify sampling effort during winter monitoring of wild turkeys (*Meleagris gallopavo*). Each row represents an individual camera and year combination, with the first and last dates of camera operation expressed as numerical day indices relative to February 14. 
+
+## Data dictionary
+
+| Column | Description |
+|---|---|
+| `Camera_ID_f` | Unique identifier assigned to each camera trap, corresponding to camera identifiers in the associated camera-trap observation datasets. |
+| `Year` | Four-digit calendar year during which camera operation was recorded. |
+| `first_date` | First day the camera was operational, expressed as a numerical index relative to February 14 of the corresponding year (1 = February 14). |
+| `last_date` | Last day the camera was operational and functioning, expressed as a numerical day index relative to February 14 of the corresponding year, using the same reference as `first_date`. |
+
